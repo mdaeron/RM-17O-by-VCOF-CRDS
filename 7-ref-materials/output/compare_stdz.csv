@@ -1,0 +1,5 @@
+method,residuals,GRESP,IAEA603,IAEA610,IAEA611,IAEA612,NBS18,NBS19
+correct_observations,D17,-0.1037,-0.1273,-0.0691,-0.0961,-0.0746,-0.1013,-0.1304
+correct_observations,d17,-0.1038,-0.1273,-0.0692,-0.0960,-0.0745,-0.1013,-0.1303
+predict_observations,D17,-0.1037,-0.1273,-0.0691,-0.0961,-0.0746,-0.1013,-0.1304
+predict_observations,d17,-0.1038,-0.1273,-0.0691,-0.0960,-0.0745,-0.1013,-0.1303

@@ -1,0 +1,45 @@
+[project]
+name = 'D17O-laser-paper'
+version = '0.9'
+description = 'Code and data for Chaillot et al. manuscript'
+authors = ['mdaeron <mathieu@daeron.fr>']
+channels = ['conda-forge']
+platforms = ['win-64', 'linux-64', 'osx-64', 'osx-arm64']
+
+[tasks]
+cleanup                 = {cmd = 'rm ./*/output/*' }
+stability-wg            = {cmd = 'python stability-wg.py', cwd ='1-stability-wg' }
+memory-effect           = {cmd = 'python memory-effect.py', cwd ='2-memory-effect' }
+pressure-effect         = {cmd = 'python pressure-effect.py', cwd ='3-pressure-effect' }
+linearity               = {cmd = 'python linearity.py', cwd ='4-linearity' }
+d13C-effect             = {cmd = 'python d13C-effect.py', cwd ='5-d13C-effect' }
+carbonate-repeatability = {cmd = 'python carbonate-repeatability.py', cwd ='6-carbonate-repeatability' }
+ref-materials           = {cmd = 'python ref-materials.py', cwd ='7-ref-materials' }
+pub-comparison          = {cmd = 'python pub-comparison.py', cwd ='8-pub-comparison' }
+all-together            = {cmd = 'python all-together.py', cwd ='9-all-together' }
+stdz-example            = {cmd = 'python stdz-example.py', cwd ='0-stdz_example' }
+format                  = {cmd = "ruff format */*.py && gsed -i 's/\\([^ <>+-=*:!\\/]\\)=\\([^ =]\\)/\\1 = \\2/g' */*.py" }
+
+all = {depends_on = [
+	'cleanup',
+	'stability-wg',
+	'memory-effect',
+	'pressure-effect',
+	'linearity',
+	'd13C-effect',
+	'carbonate-repeatability',
+	'ref-materials',
+	'pub-comparison',
+	'all-together',
+	'stdz-example',
+	]}
+
+[dependencies]
+python = '>=3.12.0,<3.13'
+numpy = '>=1.26.2,<1.27'
+matplotlib = '>=3.8.2,<3.9'
+loguru = ">=0.7.2,<0.8"
+scipy = ">=1.11.4,<1.12"
+allantools = ">=2019.9,<2020"
+lmfit = ">=1.2.2,<1.3"
+scikit-learn = ">=1.4.1.post1,<1.4.2"
