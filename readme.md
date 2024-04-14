@@ -1,6 +1,6 @@
 # RM-17O-by-VCOF-CRDS
 
-Data and code repository for *Linking the oxygen-17 compositions of water and carbonate reference materials using infrared absorption spectroscopy of carbon dioxide* (Chaillot et al., in review)
+Data and code repository for *Linking the oxygen-17 compositions of water and carbonate reference materials using infrared absorption spectroscopy of carbon dioxide* (Chaillot et al., in review [10.31223/X53Q43](https://doi.org/10.31223/X53Q43)).
 
 ## Installation and execution
 
