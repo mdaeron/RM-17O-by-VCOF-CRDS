@@ -99,7 +99,7 @@ def H2O_eq_CO2_D17_corrections(starting_CO2, eq_waters):
 
 	for w in D17_corrections:
 		logger.info(
-			f'Δ17O correction is {D17_corrections[w]*1e3:+.1f} ppm for CO2 equilibrated with {w}.'
+			f'Δ’17O correction is {D17_corrections[w]*1e3:+.1f} ppm for CO2 equilibrated with {w}.'
 		)
 
 	d18_corrections = {
@@ -177,7 +177,7 @@ def triple_oxygen_prediction_plot(
 	(_plus,) = ax.plot([], [], 'w+', mew = 4, ms = 11)
 
 	ax.set_xlabel('δ$^{18}$O$_{VSMOW}$ of CO$_2$ (‰)')
-	ax.set_ylabel('Δ$^{17}$O$_{VSMOW}$ of CO$_2$ (‰)')
+	ax.set_ylabel('Δ’$^{17}$O$_{VSMOW}$ of CO$_2$ (‰)')
 
 	ax.legend(
 		[(_square, _plus), _obs],
@@ -295,7 +295,7 @@ def D17O_prediction_plot(S, predictions, filename = 'output/predictions_D17O'):
 		zorder = -100,
 	)
 	ax.axis([xmin, xmax, xmin, xmax])
-	ax.set_ylabel(f'Observed Δ$^{{17}}$O (‰) of $CO_2$')
+	ax.set_ylabel(f'Observed Δ’$^{{17}}$O (‰) of $CO_2$')
 
 	ax.legend(
 		labelspacing = 0.2,
@@ -310,7 +310,7 @@ def D17O_prediction_plot(S, predictions, filename = 'output/predictions_D17O'):
 	ax.yaxis.set_major_locator(ticker.MultipleLocator(0.05, offset = 0.02))
 	setp(ax.get_xticklabels(), visible = False)
 
-	ax2.set_xlabel('Predicted Δ$^{17}$O (‰) of $CO_2$')
+	ax2.set_xlabel('Predicted Δ’$^{17}$O (‰) of $CO_2$')
 	ax2.set_ylabel('Residuals\n(ppm)')
 	ax2.margins(y = 0.25)
 	ax2.yaxis.set_major_locator(ticker.MultipleLocator(5))
@@ -595,7 +595,7 @@ def triple_oxygen_plot(X, filename = 'output/triple_oxygen_plot'):
 		borderpad = 1.4,
 	)
 	ax.set_xlabel('δ$^{18}O_{VSMOW}$ (‰)')
-	ax.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
+	ax.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
 	x1, x2, y1, y2 = ax.axis()
 	x0 = (x1 + x2) / 2
 	y0 = (y1 + y2) / 2
@@ -644,14 +644,14 @@ def plot_IAEA603_NBS18_residuals(S):
 	ax.set_yticks([-20, 0, 20])
 	ax.axis([None, None, -24, 24])
 	ax.set_xlabel('sequence of analyses')
-	ax.set_ylabel('Δ$^{17}O$ residuals (ppm)')
+	ax.set_ylabel('Δ’$^{17}O$ residuals (ppm)')
 
 	ax2 = ppl.subplot(211, sharex = ax)
 	ax2.plot(*zip(*XY3), 'o', mfc = (0.5, 0.5, 0.5), mec = 'k', mew = 0.8, label = 'IAEA603')
 	ax2.plot(*zip(*XY4), 'o', mfc = 'w', mec = 'k', mew = 0.8, label = 'NBS18')
 	ax2.set_xticks([])
 	ax2.set_xlabel('sequence of analyses')
-	ax2.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
+	ax2.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
 	ax2.legend(
 		fontsize = 8,
 		bbox_to_anchor = (0.5, 1.01),
@@ -785,8 +785,8 @@ def plot_seasonal_data(sdata, data):
 		)
 
 	ax.axis([xmin, xmax, ymin, ymax])
-	ax.set_xlabel('$Δ^{17}O_{VSMOW}$ of $CO_2$ from IAEA603 (‰)')
-	ax.set_ylabel('$Δ^{17}O_{VSMOW}$ of $CO_2$ from NBS18 (‰)')
+	ax.set_xlabel('$Δ’^{17}O_{VSMOW}$ of $CO_2$ from IAEA603 (‰)')
+	ax.set_ylabel('$Δ’^{17}O_{VSMOW}$ of $CO_2$ from NBS18 (‰)')
 
 	fig.savefig('output/compare_seasons')
 
@@ -828,7 +828,7 @@ if __name__ == '__main__':
 			r['Sample'] = r['Sample'] + f'_x{r["H2O_to_CO2"]:.0f}'
 
 	POSTULATED_SLAP_D17 = 0  # Fool around by turning this knob
-	logger.info(f'Postulated Δ17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
+	logger.info(f'Postulated Δ’17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
 
 	if POSTULATED_SLAP_D17:  # Adjust D17O values in the case of non-zero SLAP value
 		for w in eq_waters:
@@ -896,6 +896,27 @@ if __name__ == '__main__':
 	isofunctions.plot_kde(stdz_triple_oxygen, filename = 'output/kde')
 	triple_oxygen_plot(stdz_triple_oxygen, filename = 'output/triple_oxygen_plot')
 	plot_IAEA603_NBS18_residuals(stdz_triple_oxygen)
+
+	with open('output/analyses.csv', 'w') as fid:
+		fid.write(
+			'UID,Sample,Session,P,d636,d628,d627,d18O_VSMOW,D17O_VSMOW,d18O_residual,D17O_residual'
+		)
+		for r in stdz_triple_oxygen['data']:
+			fid.write(
+				(
+					f"\n{r['UID']}"
+					+ f",{r['Sample']}"
+					+ f",{r['Session']}"
+					+ f",{r['P']:.4f}"
+					+ f",{r['d636']:.4f}"
+					+ f",{r['d628']:.4f}"
+					+ f",{r['d627']:.4f}"
+					+ f",{r['d18corrected']:.4f}"
+					+ f",{r['D17corrected']:.4f}"
+					+ f",{r['d18residual']:.4f}"
+					+ f",{r['D17residual']:.4f}"
+				)
+			)
 
 	"""CHECK d18O VALUE OF NBS18"""
 	ratio_IAEA603_to_NBS18 = (

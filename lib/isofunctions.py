@@ -14,7 +14,7 @@ LAMBDA_17 = 0.528
 CO2g_H2O_FRACTIONATION = 'Guo & Zhou (2019)'
 # CO2g_H2O_FRACTIONATION = 'Barkan & Luz (2012)'
 
-_CO2g_H2O_fractionation = {
+CO2g_H2O_fractionations = {
 	'Guo & Zhou (2019)': dict(
 		alpha18_CO2g_H2O = 1.041461382,
 		theta17_CO2g_H2O = 0.524606996,
@@ -23,7 +23,8 @@ _CO2g_H2O_fractionation = {
 		alpha18_CO2g_H2O = 1.041036,
 		theta17_CO2g_H2O = 0.5229,
 	),
-}[CO2g_H2O_FRACTIONATION]
+}
+_CO2g_H2O_fractionation = CO2g_H2O_fractionations[CO2g_H2O_FRACTIONATION]
 
 alpha18_CO2g_H2O = _CO2g_H2O_fractionation['alpha18_CO2g_H2O']
 theta17_CO2g_H2O = _CO2g_H2O_fractionation['theta17_CO2g_H2O']
@@ -555,7 +556,7 @@ def H2O_eq_CO2_figure(
 	axis([h2o_to_co2_molar_ratio[0], h2o_to_co2_molar_ratio[-1], y1 - 0.025, None])
 	xlabel('Molar ratio of H$_2$O / CO$_2$')
 	ylabel(
-		'Δ$^{17}O_{VSMOW}$ (‰) of $CO_2$ equilibrated\n at 25$\\,$°C with different waters'
+		'Δ’$^{17}O_{VSMOW}$ (‰) of $CO_2$ equilibrated\n at 25$\\,$°C with different waters'
 	)
 
 	minorticks_off()
@@ -639,7 +640,7 @@ def d626b_plot(S, p_grubbs = 0.95, filename = 'output/d626b_outliers'):
 	axhline(0, color = 'k', lw = 0.75, dashes = (4, 2))
 	axvline(0, color = 'k', lw = 0.75, dashes = (4, 2))
 	xlabel('δ$_{626b}$ (‰)')
-	ylabel('Δ$^{17}$O residuals (ppm)')
+	ylabel('Δ’$^{17}$O residuals (ppm)')
 	margins(0.2)
 
 	savefig(filename)
@@ -748,7 +749,7 @@ def plot_residuals(
 
 	ax2.set_xticks([])
 	if key == 'D17O_VSMOW':
-		ax2.set_ylabel('Δ$^{17}Ο$ residuals (ppm)')
+		ax2.set_ylabel('Δ’$^{17}Ο$ residuals (ppm)')
 	if key == 'd18O_VSMOW':
 		ax2.set_ylabel('δ$^{18}Ο$ residuals (ppm)')
 	if key == 'd13C_VPDB':
@@ -922,7 +923,7 @@ def plot_kde(S, filename = 'kde', res = 'D17', plot_margins = 0.3, robust_cov_es
 
 	ax.clabel(cset, inline = 1, fontsize = 10)
 	ax.set_xlabel('δ$^{18}$O$_{VSMOW}$ (‰)')
-	ax.set_ylabel('Δ$^{17}$O$_{VSMOW}$ (ppm)')
+	ax.set_ylabel('Δ’$^{17}$O$_{VSMOW}$ (ppm)')
 	# 	ax.grid(False)
 
 	CM = estimate_covariance(array([x, y]).T)

@@ -18,6 +18,7 @@ from isofunctions import (
 	alpha18_CO2g_H2O,
 	theta17_CO2g_H2O,
 	alpha17_CO2g_H2O,
+	CO2g_H2O_fractionations,
 )
 
 import warnings
@@ -33,7 +34,7 @@ AUTHOR = 'M. Daëron (daeron@lsce.ipsl.fr)'
 
 SAVEFIG_FORMATS = []
 SAVEFIG_FORMATS.append('pdf')
-# SAVEFIG_FORMATS.append('png')
+SAVEFIG_FORMATS.append('png')
 
 _old_savefig = figureclass.savefig
 

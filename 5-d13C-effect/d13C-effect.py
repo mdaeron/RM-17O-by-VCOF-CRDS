@@ -49,7 +49,7 @@ def H2O_eq_CO2_D17_corrections(starting_CO2, eq_waters):
 
 	for w in D17_corrections:
 		logger.info(
-			f'Δ17O correction is {D17_corrections[w]*1e3:+.1f} ppm for CO2 equilibrated with {w}.'
+			f'Δ’17O correction is {D17_corrections[w]*1e3:+.1f} ppm for CO2 equilibrated with {w}.'
 		)
 
 	d18_corrections = {
@@ -157,7 +157,7 @@ def plot_d13C_effect():
 	ax.set_yticks([-8, -4, 0, 4, 8])
 	ax.set_xticks([])
 	ax.axis([-255, 200, -9, 9])
-	ax.set_ylabel('Δ$^{17}Ο_{VSMOW}$ (ppm)')
+	ax.set_ylabel('Δ’$^{17}Ο_{VSMOW}$ (ppm)')
 	fig.savefig('output/d13C_effect')
 	ppl.close(fig)
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
 			r['Sample'] = r['Sample'] + f'_x{r["H2O_to_CO2"]:.0f}'
 
 	POSTULATED_SLAP_D17 = 0  # Fool around by turning this knob
-	logger.info(f'Postulated Δ17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
+	logger.info(f'Postulated Δ’17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
 
 	if POSTULATED_SLAP_D17:  # Adjust D17O values in the case of non-zero SLAP value
 		for w in eq_waters:
@@ -259,6 +259,27 @@ if __name__ == '__main__':
 	isofunctions.d626b_plot(stdz_triple_oxygen, p_grubbs)
 	isofunctions.plot_kde(stdz_triple_oxygen, filename = 'output/kde')
 	isofunctions.save_sample_results(None, None, stdz_triple_oxygen)
+
+	with open('output/analyses.csv', 'w') as fid:
+		fid.write(
+			'UID,Sample,Session,P,d636,d628,d627,d18O_VSMOW,D17O_VSMOW,d18O_residual,D17O_residual'
+		)
+		for r in stdz_triple_oxygen['data']:
+			fid.write(
+				(
+					f"\n{r['UID']}"
+					+ f",{r['Sample']}"
+					+ f",{r['Session']}"
+					+ f",{r['P']:.4f}"
+					+ f",{r['d636']:.4f}"
+					+ f",{r['d628']:.4f}"
+					+ f",{r['d627']:.4f}"
+					+ f",{r['d18corrected']:.4f}"
+					+ f",{r['D17corrected']:.4f}"
+					+ f",{r['d18residual']:.4f}"
+					+ f",{r['D17residual']:.4f}"
+				)
+			)
 
 	stdz_triple_oxygen['unknowns'] = [
 		_ for _ in stdz_triple_oxygen['unknowns'] if _.startswith('C13D')

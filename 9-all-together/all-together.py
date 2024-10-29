@@ -23,7 +23,7 @@ if __name__ == '__main__':
 	}
 
 	POSTULATED_SLAP_D17 = 0  # Fool around by turning this knob
-	logger.info(f'Postulated Δ17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
+	logger.info(f'Postulated Δ’17O_VSMOW value of SLAP = {POSTULATED_SLAP_D17} ‰')
 
 	if POSTULATED_SLAP_D17:  # Adjust D17O values in the case of non-zero SLAP value
 		for w in eq_waters:
@@ -253,7 +253,7 @@ if __name__ == '__main__':
 	ax.plot(d18_ONHmix, D17_ONHmix, **kw_mixlines)
 
 	ax.set_xlabel('δ$^{18}O_{VSMOW}$ (‰)')
-	ax.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
+	ax.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
 	ax.legend(
 		loc = 'lower center',
 		bbox_to_anchor = (0.5, 1.01),
@@ -366,7 +366,7 @@ if __name__ == '__main__':
 		)
 
 	ax.set_xlabel('δ$^{18}O_{VSMOW}$ (‰)')
-	ax.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
+	ax.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
 	ax.legend(
 		loc = 'center left',
 		bbox_to_anchor = (1.01, 0.5),
@@ -414,9 +414,10 @@ if __name__ == '__main__':
 			1 + r['d18O_VSMOW'] / 1000
 		) / np.log(1 - 55.5e-3)
 
-	fig = ppl.figure(figsize = (3.15, 4.5))
-	fig.subplots_adjust(0.23, 0.11, 0.98, 0.66)
-	ax = ppl.subplot(111)
+	fig = ppl.figure(figsize = (3.15, 6.5))
+	fig.subplots_adjust(0.23, 0.2, 0.98, 0.84, 0.0, 0.15)
+	ax1 = ppl.subplot(211)
+	ax2 = ppl.subplot(212)
 
 	vsmowslap = np.array([[0, -55.5], [0, 0]])
 	co2vsmowslap = np.array(
@@ -427,271 +428,372 @@ if __name__ == '__main__':
 		]
 	)
 
-	unmcolor = (1, 0, 0)  # '#ff7f00'
-	lscecolor = (0, 0.7, 0.8)
-	o2color = [(2 + _) / 3 for _ in unmcolor]
-	co2color = [(2 + _) / 3 for _ in lscecolor]
+	unmcolor = (1, 1 / 3, 0)  # '#ff7f00'
+	lscecolor = (0, 2 / 3, 2 / 3)
+	o2color = [(1 + _) / 2 for _ in unmcolor]
+	co2color = [(1 + _) / 2 for _ in lscecolor]
 
-	kw_plot = dict(
-		ls = 'None', marker = 'D', ms = 4, mfc = o2color, mec = 'k', mew = 0.8, zorder = 2000
-	)
-	ax.plot(*vsmowslap, label = '$O_2$ from $H_2O$ (Wostbrock et al., 2020)', **kw_plot)
+	for ax in [ax1, ax2]:
+		kw_plot = dict(
+			ls = 'None', marker = 's', ms = 5, mfc = o2color, mec = 'k', mew = 0.9, zorder = 2000
+		)
+		kw_errorbar['capsize'] = 4
+		ax.plot(
+			*vsmowslap,
+			label = '$O_2$ from $H_2O$ (Wostbrock et al., 2020)' if ax == ax2 else None,
+			**kw_plot,
+		)
 
-	kw_plot['marker'] = 's'
-	kw_plot['mfc'] = o2color
-	for k, s in enumerate(['NBS18', 'IAEA603']):
-		unmco2data[s]['d18O_VSMOW'] = (
-			1000 + data[s]['d18O_VSMOW']
-		) * 1.01025 / 1.00813 - 1000
-		if 'eD17O' in unmco2data[s]:
-			ax.errorbar(
+		kw_plot['marker'] = 'd'
+		for k, s in enumerate(['NBS18', 'IAEA603']):
+			unmco2data[s]['d18O_VSMOW'] = (
+				1000 + data[s]['d18O_VSMOW']
+			) * 1.01025 / 1.00813 - 1000
+			if 'eD17O' in unmco2data[s]:
+				ax.errorbar(
+					unmco2data[s]['d18O_VSMOW'],
+					unmco2data[s]['D17O_VSMOW'],
+					unmco2data[s]['eD17O'],
+					**kw_errorbar,
+				)
+			ax.plot(
 				unmco2data[s]['d18O_VSMOW'],
 				unmco2data[s]['D17O_VSMOW'],
-				unmco2data[s]['eD17O'],
-				**kw_errorbar,
+				label = '$O_2$ from $CO_2$ from $CaCO_3$ (Wostbrock et al., 2020)'
+				if (k == 0 and ax == ax2)
+				else None,
+				**kw_plot,
 			)
+
+		kw_plot['marker'] = 's'
+		kw_plot['mfc'] = co2color
 		ax.plot(
-			unmco2data[s]['d18O_VSMOW'],
-			unmco2data[s]['D17O_VSMOW'],
-			label = None
-			if k
-			else '$O_2$ from $CO_2$ from $CaCO_3$ (Wostbrock et al., 2020)',
+			*co2vsmowslap,
+			label = '$H_2O$-equilibrated $CO_2$ (this study)' if ax == ax2 else None,
 			**kw_plot,
 		)
 
-	kw_plot['marker'] = 'D'
-	kw_plot['mfc'] = co2color
-	ax.plot(*co2vsmowslap, label = '$H_2O$-equilibrated $CO_2$ (this study)', **kw_plot)
-
-	kw_plot['marker'] = 's'
-	for k, s in enumerate(['NBS18', 'IAEA603']):
-		ax.errorbar(
-			data[s]['d18O_VSMOW'],
-			data[s]['D17O_VSMOW'],
-			data[s]['95CL_D17O_VSMOW'],
-			**kw_errorbar,
-		)
-		ax.plot(
-			data[s]['d18O_VSMOW'],
-			data[s]['D17O_VSMOW'],
-			label = None if k else '$CO_2$ from $CaCO_3$ (this study)',
-			**kw_plot,
-		)
-
-	X0 = vsmowslap[0].mean()
-	X1, Y1 = data['NBS18']['d18O_VSMOW'], data['NBS18']['D17O_VSMOW']
-	X2, Y2 = data['IAEA603']['d18O_VSMOW'], data['IAEA603']['D17O_VSMOW']
-	X3, Y3 = unmco2data['NBS18']['d18O_VSMOW'], unmco2data['NBS18']['D17O_VSMOW']
-	X4, Y4 = unmco2data['IAEA603']['d18O_VSMOW'], unmco2data['IAEA603']['D17O_VSMOW']
-
-	ARBITRARY_FACTOR = 1
-	# 	ARBITRARY_FACTOR = 0.6 # this would be enough to reconcile UNM and LSCE observations
-	a = ((Y4 - Y3) - (Y2 - Y1)) / ((X3 - X0) ** 2 - (X4 - X0) ** 2) * ARBITRARY_FACTOR
-	f = lambda x: -a * (x - X0) ** 2 + a * X0**2
-
-	# 	ax.annotate(
-	# 		'',
-	# 		xy = (X0, 0),
-	# 		xytext = (X0, a * X0**2),
-	# 		arrowprops = dict(
-	# 			arrowstyle = "->",
-	# 			color = unmcolor,
-	# 			shrinkA = 0,
-	# 			shrinkB = 0,
-	# 			patchA = None,
-	# 			patchB = None,
-	# 			lw = .8,
-	# 			mutation_scale = 7,
-	# 			),
-	# 		)
-	# 	ax.plot(X0, a * X0**2, 'o', mew = 0, mfc = unmcolor, ms = 3)
-
-	xi = np.linspace(-60, 45, 111)
-	yi = f(xi)
-	ax.plot(
-		xi,
-		yi,
-		'-',
-		color = unmcolor,
-		lw = 0.8,
-		dashes = (6, 2, 2, 2),
-		label = '\nHypothetical quadratic correction reducing\nthe difference between NBS18 and IAEA603',
-	)
-	logger.info(
-		f'Hypothetical quadratic correction for UNM data would reach {f(X0)*1000:+.1f} ppm between VSMOW2 and SLAP2'
-	)
-	logger.info(
-		f"This would change IAEA603 by {-f(unmco2data['IAEA603']['d18O_VSMOW'])*1000:.1f} ppm and NBS18 by {-f(unmco2data['NBS18']['d18O_VSMOW'])*1000:.1f} ppm."
-	)
-
-	kw_plot['mec'] = unmcolor
-	kw_plot['mfc'] = 'w'
-	kw_errorbar['ecolor'] = unmcolor
-	for k, s in enumerate(['NBS18', 'IAEA603']):
-		if 'eD17O' in unmco2data[s]:
+		kw_plot['marker'] = 'o'
+		for k, s in enumerate(['NBS18', 'IAEA603']):
 			ax.errorbar(
-				unmco2data[s]['d18O_VSMOW'],
-				unmco2data[s]['D17O_VSMOW'] - f(unmco2data[s]['d18O_VSMOW']),
-				unmco2data[s]['eD17O'],
+				data[s]['d18O_VSMOW'],
+				data[s]['D17O_VSMOW'],
+				data[s]['95CL_D17O_VSMOW'],
 				**kw_errorbar,
 			)
-		ax.plot(
-			unmco2data[s]['d18O_VSMOW'],
-			unmco2data[s]['D17O_VSMOW'] - f(unmco2data[s]['d18O_VSMOW']),
-			**kw_plot,
-		)
-
-	for s, aA, aB, shA, shB in [
-		('NBS18', 15, -15, 4, 4),
-		('IAEA603', 15, -50, 4, 4),
-	]:
-		ax.annotate(
-			'',
-			xy = (
-				unmco2data[s]['d18O_VSMOW'],
-				unmco2data[s]['D17O_VSMOW'] - f(unmco2data[s]['d18O_VSMOW']),
-			),
-			xytext = (unmco2data[s]['d18O_VSMOW'], unmco2data[s]['D17O_VSMOW']),
-			arrowprops = dict(
-				arrowstyle = '->',
-				color = unmcolor,
-				shrinkA = shA,
-				shrinkB = shB,
-				patchA = None,
-				patchB = None,
-				lw = 0.8,
-				connectionstyle = f'angle3, angleA = {aA:.0f}, angleB = {aB:.0f}',
-			),
-		)
-		ax.annotate(
-			'',
-			xy = (unmco2data[s]['d18O_VSMOW'], 0),
-			xytext = (unmco2data[s]['d18O_VSMOW'], f(unmco2data[s]['d18O_VSMOW'])),
-			arrowprops = dict(
-				arrowstyle = '->',
-				color = unmcolor,
-				shrinkA = 0,
-				shrinkB = 0,
-				patchA = None,
-				patchB = None,
-				lw = 0.8,
-				mutation_scale = 7,
-			),
-		)
-		ax.plot(
-			unmco2data[s]['d18O_VSMOW'],
-			f(unmco2data[s]['d18O_VSMOW']),
-			'o',
-			mew = 0,
-			mfc = unmcolor,
-			ms = 3,
-		)
-
-	X0 = co2vsmowslap[0].mean()
-
-	a_lsce = -((Y4 - Y3) - (Y2 - Y1)) / ((X1 - X0) ** 2 - (X2 - X0) ** 2)
-	f = lambda x: -a_lsce * (x - X0) ** 2 + a_lsce * (co2vsmowslap[0][0] - X0) ** 2
-
-	logger.info(
-		f'Hypothetical quadratic correction for LSCE data would reach {f(X0)*1000:+.1f} ppm between VSMOW2 and SLAP2'
-	)
-	logger.info(
-		f"This would change IAEA603 by {-f(data['IAEA603']['d18O_VSMOW'])*1000:.1f} ppm and NBS18 by {-f(data['NBS18']['d18O_VSMOW'])*1000:.1f} ppm."
-	)
-
-	xi = np.linspace(-20, 45)
-	yi = f(xi)
-	ax.plot(
-		xi,
-		yi + co2vsmowslap[1].mean(),
-		'-',
-		color = lscecolor,
-		lw = 0.8,
-		dashes = (6, 2, 2, 2),
-		label = '\nHypothetical quadratic correction increasing\nthe difference between NBS18 and IAEA603',
-	)
-
-	kw_plot['mec'] = lscecolor
-	kw_plot['mfc'] = 'w'
-	kw_errorbar['ecolor'] = lscecolor
-	for k, s in enumerate(['NBS18', 'IAEA603']):
-		ax.errorbar(
-			data[s]['d18O_VSMOW'],
-			data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
-			data[s]['95CL_D17O_VSMOW'],
-			**kw_errorbar,
-		)
-		ax.plot(
-			data[s]['d18O_VSMOW'],
-			data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
-			**kw_plot,
-		)
-
-	for s, aA, aB, shA, shB in [
-		('NBS18', 0, 50, 4, 6),
-		('IAEA603', -10, 10, 4, 3),
-	]:
-		ax.annotate(
-			'',
-			xy = (
+			ax.plot(
 				data[s]['d18O_VSMOW'],
-				data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
-			),
-			xytext = (data[s]['d18O_VSMOW'], data[s]['D17O_VSMOW']),
-			arrowprops = dict(
-				arrowstyle = '->',
-				color = lscecolor,
-				shrinkA = shA,
-				shrinkB = shB,
-				patchA = None,
-				patchB = None,
-				lw = 0.8,
-				connectionstyle = f'angle3, angleA = {aA:.0f}, angleB = {aB:.0f}',
-			),
-		)
-		ax.annotate(
-			'',
-			xy = (data[s]['d18O_VSMOW'], co2vsmowslap[1].mean()),
-			xytext = (
-				data[s]['d18O_VSMOW'],
-				co2vsmowslap[1].mean() + f(data[s]['d18O_VSMOW']),
-			),
-			arrowprops = dict(
-				arrowstyle = '->',
-				color = lscecolor,
-				shrinkA = 0,
-				shrinkB = 0,
-				patchA = None,
-				patchB = None,
-				lw = 0.8,
-				mutation_scale = 7,
-			),
-		)
-		ax.plot(
-			data[s]['d18O_VSMOW'],
-			co2vsmowslap[1].mean() + f(data[s]['d18O_VSMOW']),
-			'o',
-			mew = 0,
-			mfc = lscecolor,
-			ms = 3,
+				data[s]['D17O_VSMOW'],
+				label = '$CO_2$ from $CaCO_3$ (this study)'
+				if (k == 0 and ax == ax2)
+				else None,
+				**kw_plot,
+			)
+
+		X0 = vsmowslap[0].mean()
+		X1, Y1 = data['NBS18']['d18O_VSMOW'], data['NBS18']['D17O_VSMOW']
+		X2, Y2 = data['IAEA603']['d18O_VSMOW'], data['IAEA603']['D17O_VSMOW']
+		X3, Y3 = unmco2data['NBS18']['d18O_VSMOW'], unmco2data['NBS18']['D17O_VSMOW']
+		X4, Y4 = (
+			unmco2data['IAEA603']['d18O_VSMOW'],
+			unmco2data['IAEA603']['D17O_VSMOW'],
 		)
 
-	ax.set_xlabel('δ$^{18}O_{VSMOW}$ (‰)')
-	ax.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
-	ax.legend(
+		if ax == ax1:
+			X0 = co2vsmowslap[0].mean()
+
+			a_lsce = -((Y4 - Y3) - (Y2 - Y1)) / ((X1 - X0) ** 2 - (X2 - X0) ** 2)
+			f = (
+				lambda x: -a_lsce * (x - X0) ** 2
+				+ a_lsce * (co2vsmowslap[0][0] - X0) ** 2
+			)
+
+			logger.info(
+				f'Hypothetical quadratic correction for LSCE data would reach {f(X0)*1000:+.1f} ppm between VSMOW2 and SLAP2'
+			)
+			logger.info(
+				f"This would change IAEA603 by {-f(data['IAEA603']['d18O_VSMOW'])*1000:.1f} ppm and NBS18 by {-f(data['NBS18']['d18O_VSMOW'])*1000:.1f} ppm."
+			)
+
+			xi = np.linspace(-23, 50)
+			yi = f(xi)
+			ax.plot(
+				xi,
+				(yi + co2vsmowslap[1].mean()),
+				'-',
+				color = lscecolor,
+				lw = 1,
+				dashes = (6, 2, 2, 2),
+				label = '\n\n(A) Hypothetical quadratic correction\nincreasing the difference between NBS18\n and IAEA603 (this study)',
+			)
+			ax.text(
+				xi.mean() - 2,
+				f(xi.mean()) + co2vsmowslap[1].mean() - 5e-3,
+				f'{abs(f(X0))*1000:.0f} ppm deflection',
+				color = lscecolor,
+				size = 8,
+				va = 'top',
+				ha = 'center',
+				weight = 'bold',
+			)
+
+			kw_plot['mec'] = lscecolor
+			kw_plot['mfc'] = 'w'
+			# 			kw_errorbar['ecolor'] = lscecolor
+			for k, s in enumerate(['NBS18', 'IAEA603']):
+				# 				ax.errorbar(
+				# 					data[s]['d18O_VSMOW'],
+				# 					data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
+				# 					data[s]['95CL_D17O_VSMOW'],
+				# 					**kw_errorbar,
+				# 				)
+				ax.plot(
+					data[s]['d18O_VSMOW'],
+					data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
+					**kw_plot,
+				)
+
+			for s, aA, aB, shA, shB in [
+				('NBS18', 90, -90, 4, 3),
+				# 				('IAEA603', -10, 10, 4, 3),
+			]:
+				ax.annotate(
+					'',
+					xy = (
+						data[s]['d18O_VSMOW'],
+						data[s]['D17O_VSMOW'] - f(data[s]['d18O_VSMOW']),
+					),
+					xytext = (data[s]['d18O_VSMOW'], data[s]['D17O_VSMOW']),
+					arrowprops = dict(
+						arrowstyle = '->',
+						color = lscecolor,
+						shrinkA = shA,
+						shrinkB = shB,
+						patchA = None,
+						patchB = None,
+						lw = 0.8,
+						# 						connectionstyle = f'angle3, angleA = {aA:.0f}, angleB = {aB:.0f}',
+						mutation_scale = 7,
+					),
+				)
+				ax.annotate(
+					'',
+					xy = (data[s]['d18O_VSMOW'], co2vsmowslap[1].mean()),
+					xytext = (
+						data[s]['d18O_VSMOW'],
+						co2vsmowslap[1].mean() + f(data[s]['d18O_VSMOW']),
+					),
+					arrowprops = dict(
+						arrowstyle = '->',
+						color = lscecolor,
+						shrinkA = 0,
+						shrinkB = 0,
+						patchA = None,
+						patchB = None,
+						lw = 0.8,
+						mutation_scale = 7,
+					),
+				)
+				ax.plot(
+					data[s]['d18O_VSMOW'],
+					co2vsmowslap[1].mean() + f(data[s]['d18O_VSMOW']),
+					'o',
+					mew = 0,
+					mfc = lscecolor,
+					ms = 4,
+				)
+
+		if ax == ax2:
+			ARBITRARY_FACTOR = 1
+			# 	ARBITRARY_FACTOR = 0.6 # this would be enough to reconcile UNM and LSCE observations
+			a = (
+				((Y4 - Y3) - (Y2 - Y1))
+				/ ((X3 - X0) ** 2 - (X4 - X0) ** 2)
+				* ARBITRARY_FACTOR
+			)
+			f = lambda x: -a * (x - X0) ** 2 + a * X0**2
+
+			# 	ax.annotate(
+			# 		'',
+			# 		xy = (X0, 0),
+			# 		xytext = (X0, a * X0**2),
+			# 		arrowprops = dict(
+			# 			arrowstyle = "->",
+			# 			color = unmcolor,
+			# 			shrinkA = 0,
+			# 			shrinkB = 0,
+			# 			patchA = None,
+			# 			patchB = None,
+			# 			lw = .8,
+			# 			mutation_scale = 7,
+			# 			),
+			# 		)
+			# 	ax.plot(X0, a * X0**2, 'o', mew = 0, mfc = unmcolor, ms = 3)
+
+			xi = np.linspace(-70, 50, 111)
+			yi = f(xi)
+			ax.plot(
+				xi,
+				yi,
+				'-',
+				color = unmcolor,
+				lw = 1,
+				dashes = (6, 2, 2, 2),
+				# 				label = '\nHypothetical quadratic correction reducing\nthe difference between fluorinated NBS18\nand IAEA603 (Wostbrock et al., 2020)\n',
+			)
+			ax.text(
+				vsmowslap[0].mean(),
+				f(xi.mean()) + vsmowslap[1].mean() + 7e-3,
+				f'{abs(f(X0))*1000:.1f} ppm deflection',
+				color = unmcolor,
+				size = 8,
+				va = 'bottom',
+				ha = 'center',
+				weight = 'bold',
+			)
+
+			ax1.plot(
+				[],
+				[],
+				'-',
+				color = unmcolor,
+				lw = 1,
+				dashes = (6, 2, 2, 2),
+				label = '\n\n(B) Hypothetical quadratic correction\nreducing the difference between fluorinated\nNBS18 and IAEA603 (Wostbrock et al., 2020)',
+			)
+
+			logger.info(
+				f'Hypothetical quadratic correction for UNM data would reach {f(X0)*1000:+.1f} ppm between VSMOW2 and SLAP2'
+			)
+			logger.info(
+				f"This would change IAEA603 by {-f(unmco2data['IAEA603']['d18O_VSMOW'])*1000:.1f} ppm and NBS18 by {-f(unmco2data['NBS18']['d18O_VSMOW'])*1000:.1f} ppm."
+			)
+
+			kw_plot['mec'] = unmcolor
+			kw_plot['mfc'] = 'w'
+			kw_plot['marker'] = 'd'
+			kw_errorbar['ecolor'] = unmcolor
+			for k, s in enumerate(['NBS18', 'IAEA603']):
+				if 'eD17O' in unmco2data[s]:
+					ax.errorbar(
+						unmco2data[s]['d18O_VSMOW'],
+						unmco2data[s]['D17O_VSMOW'] - f(unmco2data[s]['d18O_VSMOW']),
+						unmco2data[s]['eD17O'],
+						**kw_errorbar,
+					)
+				ax.plot(
+					unmco2data[s]['d18O_VSMOW'],
+					unmco2data[s]['D17O_VSMOW'] - f(unmco2data[s]['d18O_VSMOW']),
+					**kw_plot,
+				)
+
+			for s, aA, aB, shA, shB in [
+				('NBS18', 15, -15, 4, 4),
+				('IAEA603', 25, -25, 6, 6),
+			]:
+				if s == 'IAEA603':
+					ax.annotate(
+						'',
+						xy = (
+							unmco2data[s]['d18O_VSMOW'],
+							unmco2data[s]['D17O_VSMOW']
+							- f(unmco2data[s]['d18O_VSMOW']),
+						),
+						xytext = (
+							unmco2data[s]['d18O_VSMOW'],
+							unmco2data[s]['D17O_VSMOW'],
+						),
+						arrowprops = dict(
+							arrowstyle = '->',
+							color = unmcolor,
+							shrinkA = shA,
+							shrinkB = shB,
+							patchA = None,
+							patchB = None,
+							lw = 0.8,
+							connectionstyle = f'angle3, angleA = {aA:.0f}, angleB = {aB:.0f}',
+							mutation_scale = 7,
+						),
+						zorder = 1e6,
+					)
+				ax.annotate(
+					'',
+					xy = (unmco2data[s]['d18O_VSMOW'], 0),
+					xytext = (
+						unmco2data[s]['d18O_VSMOW'],
+						f(unmco2data[s]['d18O_VSMOW']),
+					),
+					arrowprops = dict(
+						arrowstyle = '->',
+						color = unmcolor,
+						shrinkA = 0,
+						shrinkB = 0,
+						patchA = None,
+						patchB = None,
+						lw = 0.8,
+						mutation_scale = 7,
+					),
+				)
+				ax.plot(
+					unmco2data[s]['d18O_VSMOW'],
+					f(unmco2data[s]['d18O_VSMOW']),
+					'o',
+					mew = 0,
+					mfc = unmcolor,
+					ms = 4,
+				)
+
+		ax.axis([-62, 48, -200e-3, 35e-3])
+		ax.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
+
+		ax.xaxis.set_major_locator(ticker.MultipleLocator(25))
+		ax.yaxis.set_major_locator(ticker.MultipleLocator(0.05, offset = 0.0))
+
+	ax1.text(
+		0.03,
+		0.03,
+		'A',
+		ha = 'left',
+		va = 'bottom',
+		size = 12,
+		color = [0.75] * 3,
+		weight = 'bold',
+		transform = ax1.transAxes,
+	)
+
+	ax2.text(
+		0.03,
+		0.03,
+		'B',
+		ha = 'left',
+		va = 'bottom',
+		size = 12,
+		color = [0.75] * 3,
+		weight = 'bold',
+		transform = ax2.transAxes,
+	)
+
+	ax1.legend(
 		loc = 'lower center',
 		bbox_to_anchor = (0.4, 1.02),
 		fontsize = 8,
-		handlelength = 1.7,
+		handlelength = 2.3,
+		borderpad = 0,
+		frameon = False,
+		labelspacing = -1.0,
+	)
+
+	ax2.legend(
+		loc = 'upper center',
+		bbox_to_anchor = (0.35, -0.3),
+		fontsize = 8,
+		handlelength = 2.3,
 		borderpad = 0,
 		frameon = False,
 		labelspacing = 0.4,
 	)
 
-	ax.axis([-60, 48, None, None])
-
-	ax.xaxis.set_major_locator(ticker.MultipleLocator(25))
-	ax.yaxis.set_major_locator(ticker.MultipleLocator(0.05, offset = 0.0))
+	ax2.set_xlabel('δ$^{18}O_{VSMOW}$ (‰)')
 
 	fig.savefig('output/pbl-simulation')
 	ppl.close(fig)
@@ -876,3 +978,17 @@ if __name__ == '__main__':
 			fid.write(f",{data[s]['d18O_VPDB']:.2f}")
 			fid.write(f",{data[s]['SD_d18O_VPDB']:.2f}")
 			fid.write(f",{data[s]['95CL_d18O_VPDB']:.2f}")
+
+	for _dir in [
+		'4-linearity',
+		'5-d13C-effect',
+		'7-ref-materials',
+	]:
+		with open(f'../{_dir}/output/analyses.csv') as fid:
+			if _dir[0] == '4':
+				data = fid.readlines()
+			else:
+				data += ['\n'] + fid.readlines()[1:]
+
+	with open(f'output/analyses.csv', 'w') as fid:
+		fid.write(''.join(data))

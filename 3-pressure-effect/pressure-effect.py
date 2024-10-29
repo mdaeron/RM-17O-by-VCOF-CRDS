@@ -38,7 +38,7 @@ if __name__ == '__main__':
 	)
 	ax.plot(P, (D17O - D17O.mean()), 'wo', mec = 'k', mew = 1, ms = 6)
 	ax.set_xlabel('Analyte pressure (mbar)')
-	ax.set_ylabel('Δ$^{17}$O$_{WG}$ residuals (ppm)')
+	ax.set_ylabel('Δ’$^{17}$O$_{WG}$ residuals (ppm)')
 
 	ax.axis([4.89, 5.11, -17, 16])
 	ax.xaxis.set_major_locator(ticker.MultipleLocator(0.05))
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 	)
 
 	logger.info(
-		f'SD of Δ17O_WG measurements is {D17O.std(ddof = 1):.4} ‰ (N = {D17O.size})'
+		f'SD of Δ’17O_WG measurements is {D17O.std(ddof = 1):.4} ‰ (N = {D17O.size})'
 	)
 	Zvalues = (D17O - D17O.mean()) / INSTRUMENTAL_REPEATABILITY
 	pvalue = stats.kstest(Zvalues, 'norm', (0, 1)).pvalue
@@ -81,7 +81,7 @@ if __name__ == '__main__':
 			'Title': f"""
 				Absence of pressure effects. Repeated analyses of the same gas, with pressures
 				varying by ±{total_P_range:.3f} mbar, yield statistically indistinguishable
-				Δ17O values (SD = {D17O.std(ddof = 1):.1f} ppm). By comparison,
+				Δ’17O values (SD = {D17O.std(ddof = 1):.1f} ppm). By comparison,
 				analyte pressure during routine measurements remain within ±{Phwidth} mbar.
 				""".replace('\t', '').replace('\n', ' ')[1:-1],
 		},

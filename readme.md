@@ -1,6 +1,6 @@
 # RM-17O-by-VCOF-CRDS
 
-Data and code repository for *Linking the oxygen-17 compositions of water and carbonate reference materials using infrared absorption spectroscopy of carbon dioxide* (Chaillot et al., in review [10.31223/X53Q43](https://doi.org/10.31223/X53Q43)).
+Data and code repository for *Linking the oxygen-17 compositions of water and carbonate reference materials using infrared absorption spectroscopy of carbon dioxide* (Chaillot et al., in press, *Chemical Geology*)
 
 ## Installation and execution
 
@@ -41,4 +41,4 @@ pixi run stdz-example    # reads the output of linearity
 
 ## Contact
 
-Please feel free to open an issue on [GitHub](https://github.com/mdaeron/RM-17O-by-VCOF-CRDS) or contact [M. Daëron](daeron@lsce.ipsl.fr) directly.
+Please feel free to open an issue on [GitHub]() or contact [M. Daëron](daeron@lsce.ipsl.fr) directly.

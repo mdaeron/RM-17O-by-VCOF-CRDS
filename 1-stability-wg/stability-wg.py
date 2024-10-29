@@ -59,7 +59,7 @@ ax.plot(
 	zorder = 100,
 )
 
-ax.set_ylabel('Δ$^{17}Ο_{WG}$ (ppm) relative to\nlong-term WG average')
+ax.set_ylabel('Δ’$^{17}Ο_{WG}$ (ppm) relative to\nlong-term WG average')
 kw_legend = dict(
 	loc = 'lower right',
 	bbox_to_anchor = (1, 0),
@@ -95,7 +95,7 @@ ax2.plot(
 ax2.legend(**kw_legend)
 
 ax2.set_xlabel('time (h)')
-ax2.set_ylabel('Δ$^{17}Ο_{WG}$ (ppm) relative to\nshort-term WG average')
+ax2.set_ylabel('Δ’$^{17}Ο_{WG}$ (ppm) relative to\nshort-term WG average')
 ax2.axis([None, None, ymin, ymax])
 
 ax.tick_params(
@@ -121,10 +121,10 @@ fig.savefig(
 		'Author': AUTHOR,
 		'Title': """
 			Instrumental stability over a continuous period of 27 hours.
-			Upper panel: uncorrected Δ17Ο values of repeated aliquots from two CO2 tanks,
+			Upper panel: uncorrected Δ’17Ο values of repeated aliquots from two CO2 tanks,
 			relative to the overall average composition of one of the tanks (“working
 			reference gas”).
-			Lower panel: Δ17Ο values of the second tank relative to the preceding
+			Lower panel: Δ’17Ο values of the second tank relative to the preceding
 			and subsequent working-gas measurements.
 			""".replace('\t', '').replace('\n', ' ')[1:-1],
 	},
@@ -206,7 +206,7 @@ ax.plot(t, Y, '-', color = ISO_COLORS['627'], lw = 1.5)
 ax.text(
 	0.5,
 	0.05,
-	f'Δ$^{{\\mathbf{{17}}}}$O$_{{WG}}$ = {np.mean(Y):.1f} ppm (SD = {stdev(Y):.1f} ppm)',
+	f'Δ’$^{{\\mathbf{{17}}}}$O$_{{WG}}$ = {np.mean(Y):.1f} ppm (SD = {stdev(Y):.1f} ppm)',
 	transform = ax.transAxes,
 	ha = 'center',
 	va = 'bottom',
@@ -214,7 +214,7 @@ ax.text(
 	weight = 'bold',
 	size = 10,
 )
-ax.set_ylabel('Δ$^{17}O_{WG}$ (ppm)')
+ax.set_ylabel('Δ’$^{17}O_{WG}$ (ppm)')
 
 ax = ax_D627hist
 
@@ -356,7 +356,7 @@ ax.plot(tau, ad, '-', color = ISO_COLORS['628'], lw = 1, label = 'δ$_{628}$')
 
 Y = [r['D627'] for r in didata]
 (tau, ad, ade, ns) = adev(Y, data_type = 'freq', taus = 'all')
-ax.plot(tau, ad, '-', color = ISO_COLORS['627'], lw = 1.5, label = 'Δ$^{17}$O$_{WG}$')
+ax.plot(tau, ad, '-', color = ISO_COLORS['627'], lw = 1.5, label = 'Δ’$^{17}$O$_{WG}$')
 
 ax.plot(
 	[tau[0], tau[-1]],
@@ -390,7 +390,7 @@ fig.savefig(
 	metadata = {
 		'Author': AUTHOR,
 		'Title': """
-			Allan plot (left) and Δ17O, δ628, δ636, time series corresponding
+			Allan plot (left) and Δ’17O, δ628, δ636, time series corresponding
 			to the working-gas measurements of figure 5. Allan deviation is
 			computed with no overlap. Analytical scatter of repeated aliquots
 			behaves as expected for white noise.

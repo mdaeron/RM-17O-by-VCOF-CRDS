@@ -1,5 +1,5 @@
-[ 26]    Postulated Δ17O_VSMOW value of SLAP = 0 ‰
-[520]    Hypothetical quadratic correction for UNM data would reach +8.5 ppm between VSMOW2 and SLAP2
-[523]    This would change IAEA603 by 40.9 ppm and NBS18 by 14.4 ppm.
-[595]    Hypothetical quadratic correction for LSCE data would reach -38.2 ppm between VSMOW2 and SLAP2
-[598]    This would change IAEA603 by 11.2 ppm and NBS18 by 37.7 ppm.
+[ 26]    Postulated Δ’17O_VSMOW value of SLAP = 0 ‰
+[511]    Hypothetical quadratic correction for LSCE data would reach -38.2 ppm between VSMOW2 and SLAP2
+[514]    This would change IAEA603 by 11.2 ppm and NBS18 by 37.7 ppm.
+[665]    Hypothetical quadratic correction for UNM data would reach +8.5 ppm between VSMOW2 and SLAP2
+[668]    This would change IAEA603 by 40.9 ppm and NBS18 by 14.4 ppm.

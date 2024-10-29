@@ -20,5 +20,5 @@ if __name__ == '__main__':
 	d628 = np.array([_['d628'] for _ in data])
 	D17O = 1e6 * (np.log(1 + d627 / 1e3) - LAMBDA_17 * np.log(1 + d628 / 1e3))
 	logger.info(
-		f'Carbonate Δ17O repeatability = {D17O.std(ddof = 1):.1f} ppm (1SD, N = {len(data)})'
+		f'Carbonate Δ’17O repeatability = {D17O.std(ddof = 1):.1f} ppm (1SD, N = {len(data)})'
 	)

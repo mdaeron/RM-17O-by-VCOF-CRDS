@@ -59,6 +59,148 @@ def standardize_triple_oxygen(data, anchors):
 	return stdz_triple_oxygen
 
 
+def comparison_huj_lsce(
+	ourdata, filename = 'output/lsce_vs_huj', force_D17O_603_of_NBS18=None
+):
+	CO2g_H2O_effect = (
+		np.log(CO2g_H2O_fractionations['Barkan & Luz (2012)']['alpha18_CO2g_H2O'])
+		* (
+			CO2g_H2O_fractionations['Barkan & Luz (2012)']['theta17_CO2g_H2O']
+			- LAMBDA_17
+		)
+		- np.log(CO2g_H2O_fractionations['Guo & Zhou (2019)']['alpha18_CO2g_H2O'])
+		* (CO2g_H2O_fractionations['Guo & Zhou (2019)']['theta17_CO2g_H2O'] - LAMBDA_17)
+	) * 1000
+
+	with open('input/assonov.csv') as fid:
+		hujdata = [l.strip().split(',') for l in fid.readlines() if len(l) > 1]
+	hujdata = [
+		{k: float(v) if 'D17O' in k else v for k, v in zip(hujdata[0], l)}
+		for l in hujdata[1:]
+	]
+	hujdata = {l['Sample']: l for l in hujdata}
+
+	with open('output/compilation.csv') as fid:
+		pubdata = [l.strip().split(',') for l in fid.readlines() if len(l) > 1]
+	pubdata = [
+		{k: float(v) if 'D17O' in k and v else v for k, v in zip(pubdata[0], l)}
+		for l in pubdata[1:]
+	]
+
+	D17O_VSMOW_of_NBS19_HUJ = [
+		_ for _ in pubdata if _['Sample'] == 'NBS19' and 'Barkan' in _['Ref']
+	][0]['D17O_VSMOW']
+	eD17O_VSMOW_of_NBS19_HUJ = [
+		_ for _ in pubdata if _['Sample'] == 'NBS19' and 'Barkan' in _['Ref']
+	][0]['eD17O_VSMOW']
+
+	fig = ppl.figure(figsize = (3.15, 3.15))
+	fig.subplots_adjust(0.25, 0.25, 0.98, 0.98)
+	ax = ppl.subplot(111)
+
+	Y = np.array([hujdata[k]['D17O_NBS19'] + D17O_VSMOW_of_NBS19_HUJ for k in hujdata])
+	eY = np.array(
+		[
+			(0.0089 if k.startswith('IAEA61') else 0.010)
+			if k != 'NBS19'
+			else eD17O_VSMOW_of_NBS19_HUJ
+			for k in hujdata
+		]
+	)
+	X = np.array([float(ourdata[k]['D17O_VSMOW']) + CO2g_H2O_effect for k in hujdata])
+	eX = np.array([float(ourdata[k]['95CL_D17O_VSMOW']) for k in hujdata])
+
+	if force_D17O_603_of_NBS18:
+		d18O = [float(ourdata[k]['d18O_VSMOW']) + CO2g_H2O_effect for k in hujdata]
+		D17Ocorr_lsce = np.array(
+			[
+				(
+					np.log(float(ourdata[k]['d18O_VSMOW']))
+					- np.log(float(ourdata['IAEA603']['d18O_VSMOW']))
+				)
+				/ (
+					np.log(float(ourdata['NBS18']['d18O_VSMOW']))
+					- np.log(float(ourdata['IAEA603']['d18O_VSMOW']))
+				)
+				* (
+					force_D17O_603_of_NBS18
+					- float(ourdata['NBS18']['D17O_VSMOW'])
+					+ float(ourdata['IAEA603']['D17O_VSMOW'])
+				)
+				for k in hujdata
+			]
+		)
+
+		D17Ocorr_huj = np.array(
+			[
+				(
+					np.log(float(ourdata[k]['d18O_VSMOW']))
+					- np.log(float(ourdata['IAEA603']['d18O_VSMOW']))
+				)
+				/ (
+					np.log(float(ourdata['NBS18']['d18O_VSMOW']))
+					- np.log(float(ourdata['IAEA603']['d18O_VSMOW']))
+				)
+				* (
+					force_D17O_603_of_NBS18
+					- hujdata['NBS18']['D17O_NBS19']
+					+ hujdata['IAEA603']['D17O_NBS19']
+				)
+				for k in hujdata
+			]
+		)
+
+		X += D17Ocorr_lsce
+		Y += D17Ocorr_huj
+
+	ppl.errorbar(
+		X, Y, eY, eX, ecolor = 'k', elinewidth = 1, capsize = 2.5, ls = 'None', marker = 'None'
+	)
+	ppl.plot(X, Y, 'wo', mec = 'k', ms = 5, zorder = 200)
+	xi = np.array(ppl.axis()[:2])
+	xi[0] = xi[0] - 0.007
+	xi[1] = xi[1] + 0.012
+
+	ppl.plot(xi, xi, 'k', marker = 'None', lw = 0.7, ls = (-3, (6, 3, 2, 3)), zorder = 100)
+	ppl.axis([*xi, *xi])
+
+	for x, y, ex, ey, t in zip(X, Y, eX, eY, hujdata):
+		if y > (x + 0.002):
+			ppl.text(
+				x - 0.003,
+				y + 0.003,
+				t,
+				size = 7,
+				color = [0.35] * 3,
+				va = 'bottom',
+				ha = 'right',
+			)
+		else:
+			ppl.text(
+				x + 0.003, y - 0.003, t, size = 7, color = [0.35] * 3, va = 'top', ha = 'left'
+			)
+		if t.startswith('IAEA61'):
+			ppl.plot(x, y + ey, 'wo', ms = 7, mew = 0)
+			ppl.plot(x, y - ey, 'wo', ms = 7, mew = 0)
+			ppl.text(
+				x, y + ey - 0.0004, '?', size = 6, weight = 'bold', va = 'center', ha = 'center'
+			)
+			ppl.text(
+				x, y - ey - 0.0004, '?', size = 6, weight = 'bold', va = 'center', ha = 'center'
+			)
+
+	ppl.ylabel('$Δ’^{17}O_{VSMOW}$ from HUJ (‰)')
+	ppl.xlabel(
+		'$Δ’^{17}O_{VSMOW}$ from this study (‰),\nusing $CO_2/H_2O$ fractionation factors\nof $\\mathit{Barkan\\ &\\ Luz}$ (2012)'
+	)
+
+	ax.xaxis.set_major_locator(ticker.MultipleLocator(0.03))
+	ax.yaxis.set_major_locator(ticker.MultipleLocator(0.03))
+
+	fig.savefig(filename)
+	ppl.close(fig)
+
+
 def pub_comparison_plot(data, filename = 'output/pub_comparison'):
 	fig = ppl.figure(figsize = (6.62, 3))
 	fig.subplots_adjust(0.11, 0.05, 0.98, 0.95, 1.65)
@@ -79,7 +221,7 @@ def pub_comparison_plot(data, filename = 'output/pub_comparison'):
 	markers = {
 		None: (4, 0, 45),
 		'90': (3, 0, 0),
-		'70': (4, 0, 0),
+		# 		'70': (4, 0, 0),
 		'25': (3, 0, 180),
 	}
 
@@ -187,7 +329,7 @@ def pub_comparison_plot(data, filename = 'output/pub_comparison'):
 			linespacing = 1,
 		)
 
-	ax.set_ylabel('Δ$^{17}O_{VSMOW}$ (‰)')
+	ax.set_ylabel('Δ’$^{17}O_{VSMOW}$ (‰)')
 
 	ax.set_xticks([])
 	ax.set_xlim((-1 + xmin - 0.5, 1 + xmax + 0.5))
@@ -285,7 +427,7 @@ def pub_comparison_plot(data, filename = 'output/pub_comparison'):
 
 	ax.set_xticks([])
 
-	ax.set_ylabel('Δ$^{17}O_{603}$ (‰)')
+	ax.set_ylabel('Δ’$^{17}O_{\\text{IAEA603}}$ (‰)')
 
 	fig.savefig(filename)
 	ppl.close(fig)
@@ -362,7 +504,7 @@ if __name__ == '__main__':
 		) ** 0.5
 		if r['Sample'] == 'NBS18':
 			logger.info(
-				f"{r['Ref']:<24s}: Δ17O_603 of NBS18 = {r['D17O_603']*1e3:.1f} ± {r['eD17O_603']*1e3:.1f}"
+				f"{r['Ref']:<24s}: Δ’17O_603 of NBS18 = {r['D17O_603']*1e3:.1f} ± {r['eD17O_603']*1e3:.1f}"
 			)
 
 	"""SAVE RESULTS"""
@@ -388,3 +530,5 @@ if __name__ == '__main__':
 
 	"""PLOT EVERYTHING"""
 	pub_comparison_plot(pubdata)
+	comparison_huj_lsce(ourdata)
+# 	comparison_huj_lsce(ourdata, force_D17O_603_of_NBS18 = 0.050, filename = 'output/lsce_vs_huj_50ppm')

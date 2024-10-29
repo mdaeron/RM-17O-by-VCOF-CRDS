@@ -536,13 +536,13 @@ def kde_example(plot_margins = 0.5, robust_cov_estimator = True):
 
 	for x, y, ax, delta in [
 		(d18, d17, ppl.subplot(211), 'δ'),
-		(d18, D17, ppl.subplot(212), 'Δ'),
+		(d18, D17, ppl.subplot(212), 'Δ’'),
 	]:
 		ax.xaxis.set_major_locator(ticker.MultipleLocator(0.5))
 		ax.yaxis.set_major_locator(
-			ticker.MultipleLocator(0.01 if delta == 'Δ' else 0.5)
+			ticker.MultipleLocator(0.01 if delta == 'Δ’' else 0.5)
 		)
-		if delta == 'Δ':
+		if delta == 'Δ’':
 			ax.yaxis.set_major_formatter(
 				ticker.FuncFormatter(lambda x, pos: f'${x:+.2f}$' if x else '$0$')
 			)
@@ -569,19 +569,19 @@ def kde_example(plot_margins = 0.5, robust_cov_estimator = True):
 		)
 
 		ax.set_xlim(xmin, xmax)
-		if delta == 'Δ':
+		if delta == 'Δ’':
 			ax.set_ylim(ymin, ymax)
 		else:
 			ax.set_ylim(xmin, xmax)
 
 		ax.plot(x, y, 'k+', mew = 0.7, ms = 9, alpha = 1)
 
-		ax.set_ylabel(delta + '$^{17}$O$_{VSMOW}$ residuals (‰)')
+		ax.set_ylabel('$' + delta + '{}^{17}$O$_{VSMOW}$ residuals (‰)')
 
 		CM = isofunctions.estimate_covariance(np.array([x, y]).T)
 		kw = dict(fc = 'None', ec = 'k', lw = 1, alpha = 0.25)
 		w, h, r = isofunctions.cov_ellipse(CM, r = 1)
-		for f in [1, 2, 3, 4] if delta == 'Δ' else [4]:
+		for f in [1, 2, 3, 4] if delta == 'Δ’' else [4]:
 			ax.add_patch(Ellipse(xy = (0, 0), width = w * f, height = h * f, angle = r, **kw))
 
 	# 		kw = dict(color = kw["fc"], lw = 6, ls = '-', alpha = kw['alpha'])

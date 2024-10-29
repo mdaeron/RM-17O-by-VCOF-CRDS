@@ -1,22 +1,22 @@
-[831]    Postulated Δ17O_VSMOW value of SLAP = 0 ‰
-[101]    Δ17O correction is -3.1 ppm for CO2 equilibrated with SLAP2_x387.
-[101]    Δ17O correction is -2.9 ppm for CO2 equilibrated with SLAP2_x416.
-[101]    Δ17O correction is +0.8 ppm for CO2 equilibrated with VSMOW2_x450.
-[101]    Δ17O correction is +1.7 ppm for CO2 equilibrated with VSMOW2_x222.
-[101]    Δ17O correction is +1.1 ppm for CO2 equilibrated with VSMOW2_x347.
-[101]    Δ17O correction is -2.6 ppm for CO2 equilibrated with SLAP2_x450.
-[101]    Δ17O correction is +1.3 ppm for CO2 equilibrated with VSMOW2_x292.
-[101]    Δ17O correction is -5.3 ppm for CO2 equilibrated with SLAP2_x222.
-[101]    Δ17O correction is +0.9 ppm for CO2 equilibrated with VSMOW2_x438.
-[101]    Δ17O correction is -3.4 ppm for CO2 equilibrated with SLAP2_x347.
-[101]    Δ17O correction is +1.1 ppm for CO2 equilibrated with VSMOW2_x340.
-[101]    Δ17O correction is +1.8 ppm for CO2 equilibrated with VSMOW2_x208.
-[101]    Δ17O correction is -3.5 ppm for CO2 equilibrated with SLAP2_x340.
-[101]    Δ17O correction is -5.6 ppm for CO2 equilibrated with SLAP2_x208.
-[101]    Δ17O correction is +0.9 ppm for CO2 equilibrated with VSMOW2_x416.
+[831]    Postulated Δ’17O_VSMOW value of SLAP = 0 ‰
+[101]    Δ’17O correction is -5.6 ppm for CO2 equilibrated with SLAP2_x208.
+[101]    Δ’17O correction is +0.8 ppm for CO2 equilibrated with VSMOW2_x450.
+[101]    Δ’17O correction is -2.6 ppm for CO2 equilibrated with SLAP2_x450.
+[101]    Δ’17O correction is +1.1 ppm for CO2 equilibrated with VSMOW2_x340.
+[101]    Δ’17O correction is -3.1 ppm for CO2 equilibrated with SLAP2_x387.
+[101]    Δ’17O correction is -2.9 ppm for CO2 equilibrated with SLAP2_x416.
+[101]    Δ’17O correction is +1.8 ppm for CO2 equilibrated with VSMOW2_x208.
+[101]    Δ’17O correction is +1.3 ppm for CO2 equilibrated with VSMOW2_x292.
+[101]    Δ’17O correction is +0.9 ppm for CO2 equilibrated with VSMOW2_x416.
+[101]    Δ’17O correction is -5.3 ppm for CO2 equilibrated with SLAP2_x222.
+[101]    Δ’17O correction is -3.4 ppm for CO2 equilibrated with SLAP2_x347.
+[101]    Δ’17O correction is +0.9 ppm for CO2 equilibrated with VSMOW2_x438.
+[101]    Δ’17O correction is -3.5 ppm for CO2 equilibrated with SLAP2_x340.
+[101]    Δ’17O correction is +1.7 ppm for CO2 equilibrated with VSMOW2_x222.
+[101]    Δ’17O correction is +1.1 ppm for CO2 equilibrated with VSMOW2_x347.
 [543]    GRESP-CO2: D17O_VSMOW = -0.1037 ‰
 [544]    GRESP-H2O: D17O_VSMOW = 0.0342 ‰
-[909]    Predicted d18O_VPDB of NBS18 is -22.83 ± 0.02 ‰ (1SE)
+[930]    Predicted d18O_VPDB of NBS18 is -22.83 ± 0.02 ‰ (1SE)
 [485]    GRESP yields
 		d18O_VSMOW = -33.416 ‰
 		D17O_VSMOW = 0.0352 ‰

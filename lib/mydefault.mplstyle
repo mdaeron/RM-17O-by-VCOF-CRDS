@@ -15,6 +15,6 @@ axes.linewidth    : 1
 grid.linewidth    : .75
 grid.linestyle    : -
 grid.alpha        : .2
-savefig.dpi       : 150
+savefig.dpi       : 200
 legend.framealpha : 1
 savefig.format    : pdf

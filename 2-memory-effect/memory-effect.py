@@ -117,8 +117,8 @@ if __name__ == '__main__':
 			)
 			ax.autoscale_view()
 
-			ax.set_xlabel(f'First δ$_{{{field[1:]}}}$ value')
-			ax.set_ylabel(f'Second δ$_{{{field[1:]}}}$ value')
+			ax.set_xlabel(f'First δ$_{{{field[1:]}}}$ value (‰)')
+			ax.set_ylabel(f'Second δ$_{{{field[1:]}}}$ value (‰)')
 			if field == 'd636':
 				ax.set_title(f'Tank {tank}')
 
